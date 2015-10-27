@@ -1,6 +1,7 @@
 package com.connecthealth.app;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -51,26 +52,36 @@ public class MainWebActivity extends AppCompatActivity {
 
 
         // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
+//        mContentView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                toggle();
+//            }
+//        });
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+//        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
         WebView webView = (WebView) findViewById(R.id.fullscreen_content);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        final ProgressDialog mConnectionProgressDialog = new ProgressDialog(this);
+        mConnectionProgressDialog.setMessage("Cargando...");
+        mConnectionProgressDialog.show();
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 return false;
 
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                if (mConnectionProgressDialog != null && mConnectionProgressDialog.isShowing()) {
+                    mConnectionProgressDialog.dismiss();
+                }
             }
         });
         webView.loadUrl("http://conh.herokuapp.com");
@@ -83,7 +94,7 @@ public class MainWebActivity extends AppCompatActivity {
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide(100);
+//        delayedHide(100);
     }
 
     /**
